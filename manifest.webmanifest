@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "ZimPro-Linkup",
+  "short_name": "ZimPro",
+  "description": "Zimbabwe's free marketplace for jobs, services & properties.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#1877F2",
+  "theme_color": "#1877F2",
+  "lang": "en",
+  "categories": ["business", "social", "lifestyle"],
+  "icons": [
+    { "src": "icons/zpl-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/zpl-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/zpl-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
