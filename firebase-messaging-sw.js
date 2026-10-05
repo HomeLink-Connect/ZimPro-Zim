@@ -1,77 +1,85 @@
-/* ZimPro-Linkup service worker — shows call & message notifications when the app is minimised or closed.
-   Needs NO Firebase library: the server (netlify/functions/push.js) sends data-only pushes and this file displays them. */
-const ICON = 'icons/zpl-192.png';
-const scopeUrl = p => new URL(p, self.registration.scope).href;
+/* ZimPro-Linkup — background push service worker.
+   Must sit in the SAME folder as index.html (site root). */
+importScripts("https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging-compat.js");
 
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-self.addEventListener('fetch', () => {});            /* pass-through (keeps the app installable on older Chrome) */
+firebase.initializeApp({
+  apiKey: "AIzaSyA7okyR40IeNWJjH5h0cbQF8yYR_5QHi3w",
+  authDomain: "zimpro-linkup.firebaseapp.com",
+  projectId: "zimpro-linkup",
+  storageBucket: "zimpro-linkup.firebasestorage.app",
+  messagingSenderId: "794726149912",
+  appId: "1:794726149912:web:90814952c75a3fa278786d"
+});
 
-function parse(event){
-  let p = {};
-  try{ p = event.data ? event.data.json() : {}; }catch(e){ try{ p = { data:{ body:event.data.text() } }; }catch(_){} }
-  const d = Object.assign({}, p.notification || {}, p.data || (p.type || p.title ? p : {}));
-  return d;
-}
-async function appIsVisible(){
-  const list = await self.clients.matchAll({ type:'window', includeUncontrolled:true });
-  return list.some(c => c.visibilityState === 'visible' && c.focused !== false);
-}
+const messaging = firebase.messaging();
+const ICON = "icons/zpl-192.png";
 
-self.addEventListener('push', event => {
-  const d = parse(event);
-  if(!d || (!d.type && !d.title)) return;
-  event.waitUntil((async () => {
-    /* app is open on screen → the page already rings / shows the message itself */
-    if(await appIsVisible()) return;
+/* The push server sends DATA-ONLY messages, so we build the notification here.
+   Tags match the ones index.html uses (msg_<convId> / call_<callId>) so you never get duplicates. */
+messaging.onBackgroundMessage((payload) => {
+  const d = payload.data || {};
+  const isCall = d.kind === "call";
 
-    if(d.type === 'call'){
-      const age = Date.now() - (+d.ts || Date.now());
-      if(age > 60000) return;                                   /* stale call, don't ring */
-      const tag = 'call_' + d.callId;
-      const opts = {
-        body: d.body || (d.video === '1' ? 'Incoming ZimPro video call' : 'Incoming ZimPro voice call'),
-        icon: d.photo || ICON, badge: ICON, tag, renotify:true, requireInteraction:true, silent:false,
-        vibrate:[500,250,500,250,500,250,500],
-        actions:[{ action:'answer', title:'Answer' }, { action:'decline', title:'Decline' }],
-        data:{ kind:'call', callId:d.callId, uid:d.uid, name:d.name }
-      };
-      await self.registration.showNotification((d.name || 'Someone') + ' is calling…', opts);
-      /* keep it "ringing": re-alert every 5 s (up to ~35 s) while the notification is still on screen */
-      for(let i = 0; i < 7; i++){
-        await new Promise(r => setTimeout(r, 5000));
-        const still = await self.registration.getNotifications({ tag });
-        if(!still.length) break;
-        await self.registration.showNotification((d.name || 'Someone') + ' is calling…', opts);
+  const title = d.title || (isCall ? "Incoming ZimPro call" : "New message");
+  const options = {
+    body: d.body || "",
+    icon: ICON,
+    badge: ICON,
+    tag: isCall ? "call_" + d.callId : "msg_" + (d.convId || d.uid || "x"),
+    renotify: true,
+    data: d,
+  };
+
+  if (isCall) {
+    options.requireInteraction = true;
+    options.vibrate = [300, 150, 300, 150, 300];
+    options.actions = [
+      { action: "answer", title: "Answer" },
+      { action: "decline", title: "Decline" },
+    ];
+  }
+
+  // Number on the app icon (installed app): Android / Windows / macOS / iOS home-screen app
+  const n = parseInt(d.badge, 10);
+  if (!isNaN(n) && self.navigator && "setAppBadge" in self.navigator) {
+    (n > 0 ? self.navigator.setAppBadge(n) : self.navigator.clearAppBadge()).catch(() => {});
+  }
+
+  return self.registration.showNotification(title, options);
+});
+
+/* Tap on a notification (or one of its buttons) */
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const d = event.notification.data || {};
+  const msg = {
+    type: "zpl-open",
+    kind: d.kind,
+    uid: d.uid,
+    name: d.name,
+    photo: d.photo,
+    callId: d.callId,
+    action: event.action || "",
+  };
+
+  event.waitUntil(
+    (async () => {
+      const all = await clients.matchAll({ type: "window", includeUncontrolled: true });
+      // App already open somewhere: focus it and hand over the details
+      for (const c of all) {
+        if ("focus" in c) {
+          await c.focus();
+          c.postMessage(msg);
+          return;
+        }
       }
-      return;
-    }
-
-    await self.registration.showNotification(d.title || d.name || 'New message', {
-      body: d.body || 'You have a new message',
-      icon: d.photo || ICON, badge: ICON, tag: 'msg_' + (d.convId || d.uid || 'x'), renotify:true,
-      vibrate:[200,100,200], data:{ kind:'message', uid:d.uid, name:d.name, convId:d.convId }
-    });
-  })());
+      // App closed: open it with the details in the URL (index.html reads these on launch)
+      const q = new URLSearchParams({ from: "push", open: d.kind || "", uid: d.uid || "", name: d.name || "", callId: d.callId || "", act: event.action || "" });
+      await clients.openWindow("./?" + q.toString());
+    })()
+  );
 });
 
-self.addEventListener('notificationclick', event => {
-  const n = event.notification, data = n.data || {};
-  n.close();
-  event.waitUntil((async () => {
-    const act = event.action === 'decline' ? 'decline' : (event.action === 'answer' ? 'answer' : '');
-    if(data.kind === 'call' && act === 'decline'){
-      const list = await self.clients.matchAll({ type:'window', includeUncontrolled:true });
-      if(list.length){ list.forEach(c => c.postMessage({ type:'zpl-open', kind:'call', callId:data.callId, action:'decline' })); return; }
-      /* app is fully closed: open it quietly just to send the "declined" signal */
-      return self.clients.openWindow(scopeUrl('./?from=push&open=call&act=decline&callId=' + encodeURIComponent(data.callId || '')));
-    }
-    const list = await self.clients.matchAll({ type:'window', includeUncontrolled:true });
-    const msg = Object.assign({ type:'zpl-open', action:act }, data);
-    for(const c of list){
-      if('focus' in c){ await c.focus(); c.postMessage(msg); return; }
-    }
-    const q = new URLSearchParams({ from:'push', open:data.kind || '', uid:data.uid || '', name:data.name || '', callId:data.callId || '', act });
-    return self.clients.openWindow(scopeUrl('./?' + q.toString()));
-  })());
-});
+self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("activate", (e) => e.waitUntil(clients.claim()));
