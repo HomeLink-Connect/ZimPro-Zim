@@ -124,6 +124,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
       try { await setPersistence(auth, browserLocalPersistence); } catch (e) { console.warn('Persistence:', e.message); }
+      try { if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}   /* stops the browser clearing the saved login */
 
       window._zpl = {
         auth, db,
@@ -1475,12 +1476,38 @@ html[data-theme=light] body,html[data-theme=emerald] body{background:var(--bg);}
 .zd-hint{font-size:12px;color:#64748b;margin:0 0 8px;line-height:1.45;}
 .trend-head{display:flex !important;flex-wrap:wrap;align-items:center;gap:10px 8px;}
 .trend-head .th-title{flex:1;min-width:0;}
-.tog-row{order:3;flex:0 0 100%;display:flex;align-items:center;gap:10px;}
-.doc-tog{display:flex;height:34px;padding:3px;border-radius:99px;background:var(--surface-2);box-shadow:inset 0 0 0 1px rgba(0,0,0,.07);gap:2px;}
-.doc-tog button{height:28px;padding:0 13px;border:0;border-radius:99px;background:none;display:flex;align-items:center;gap:6px;font:800 11px Inter,sans-serif;color:var(--text-dim);cursor:pointer;transition:background .2s,transform .15s;}
+.tog-row{order:3;flex:0 0 100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;}
+.doc-tog{display:flex;flex:1 1 230px;height:34px;padding:3px;border-radius:99px;background:var(--surface-2);box-shadow:inset 0 0 0 1px rgba(0,0,0,.07);gap:2px;}
+.doc-tog button{flex:1;justify-content:center;height:28px;padding:0 9px;border:0;border-radius:99px;background:none;display:flex;align-items:center;gap:6px;font:800 11px Inter,sans-serif;color:var(--text-dim);cursor:pointer;transition:background .2s,transform .15s;}
 .doc-tog button i{font-size:12.5px;}
-.doc-tog button[data-d=cv] i{color:#7C3AED;}.doc-tog button[data-d=letter] i{color:#0E9F6E;}
+.doc-tog button[data-d=cv] i{color:#7C3AED;}.doc-tog button[data-d=letter] i{color:#0E9F6E;}.doc-tog button[data-d=quote] i{color:#F59E0B;}.doc-tog button[data-d=invoice] i{color:#1877F2;}
 .doc-tog button:active{background:#fff;transform:scale(.95);box-shadow:0 1px 4px rgba(0,0,0,.15);}
+.zd-doc{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--border);}.zd-doc:first-of-type{border-top:0}.zd-doc>div{flex:1;cursor:pointer;min-width:0}.zd-doc b{display:block;font:700 13.5px Inter,sans-serif}.zd-doc span{font-size:11.5px;color:#64748b}.zd-doc button{border:0;background:none;font-size:17px;cursor:pointer}
+.pc-btn.pc-apply{display:flex;align-items:center;justify-content:center}.pc-btn.pc-apply i{font-size:19px;color:#7C3AED}
+.btn-apply{background:#F3EEFF !important;color:#6D28D9 !important}
+.zd-hero{display:flex;align-items:center;gap:14px;padding:18px;border-radius:22px;background:linear-gradient(135deg,#0B3D91 0%,#1877F2 60%,#38BDF8 100%);box-shadow:0 10px 26px rgba(24,119,242,.3);}
+.zd-hero>i{width:46px;height:46px;border-radius:15px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;}
+.zd-tabs{background:#eef2f8;padding:4px;border-radius:16px;gap:4px;}.zd-tabs button{border:0 !important;background:none !important;color:#475569 !important;border-radius:12px !important;padding:10px 4px !important;font:800 12.5px Inter,sans-serif !important;display:flex;align-items:center;justify-content:center;gap:6px;line-height:1.15;}
+.zd-tabs button.on{background:#fff !important;color:#1877F2 !important;box-shadow:0 2px 8px rgba(15,23,42,.14);}
+.zd-step{display:flex;align-items:center;gap:10px;font:800 14px Sora,sans-serif;margin:16px 0 10px;}.zd-step b{width:26px;height:26px;border-radius:50%;background:#1877F2;color:#fff;display:flex;align-items:center;justify-content:center;font:800 12.5px Inter,sans-serif;}
+.zd-card{border:0 !important;border-radius:22px !important;padding:16px !important;box-shadow:0 6px 22px rgba(15,23,42,.07);}
+.zd-card h4{display:flex !important;align-items:center;gap:12px;margin:0 0 14px !important;font:800 15px Sora,sans-serif;}.zd-card h4 small{display:block;font:500 11.5px Inter,sans-serif;color:#64748b;margin-top:2px;}
+.zd-ic{width:38px;height:38px;border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex:none;box-shadow:0 4px 10px rgba(15,23,42,.18);}
+.zd-f{display:flex;align-items:center;gap:12px;background:#f5f8fc;border:1.5px solid #e4eaf3;border-radius:18px;padding:9px 14px 9px 10px;margin:0 0 10px;transition:border-color .15s,box-shadow .15s,background .15s;}
+.zd-f:focus-within{background:#fff;border-color:#1877F2;box-shadow:0 0 0 4px rgba(24,119,242,.13);}
+.zd-f>i{width:36px;height:36px;border-radius:12px;background:#e6f0ff;color:#1877F2;display:flex;align-items:center;justify-content:center;font-size:14px;flex:none;}
+.zd-f:focus-within>i{background:#1877F2;color:#fff;}
+.zd-f>div{flex:1;min-width:0;}.zd-f span{display:block;font:700 10px Inter,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:#64748b;margin-bottom:1px;}
+.zd-card .zd-f input,.zd-card .zd-f textarea,.zd-card .zd-f select{width:100%;border:0 !important;background:transparent !important;padding:2px 0 !important;font:600 14.5px Inter,sans-serif !important;color:var(--text);outline:0;box-shadow:none !important;border-radius:0 !important;}
+.zd-f.area{align-items:flex-start;}.zd-f.area>i{margin-top:2px;}.zd-card .zd-f textarea{min-height:64px;}
+.zd-two{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;}
+.zd-photo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;}.zd-thumb.zd-sq{border-radius:14px;}.zd-thumb i{font-size:20px;}
+.zd-pick{margin:0 !important;padding:9px 14px !important;font-size:13px !important;border-radius:99px !important;}
+.zd-add{width:100%;border:2px dashed #b9d3fb !important;background:#f3f8ff !important;border-radius:16px !important;margin-top:4px;padding:12px !important;}
+.zd-rm{padding:8px 14px !important;font-size:12.5px !important;border-radius:99px !important;margin:0 0 10px;}
+.zd-magic{width:100%;margin-bottom:12px;background:linear-gradient(135deg,#8B5CF6,#1877F2) !important;box-shadow:0 6px 16px rgba(99,102,241,.35);border-radius:16px !important;padding:14px !important;}
+.zd-sub{border-top:1.5px dashed #dbe3ef !important;margin-top:8px !important;padding-top:14px !important;}
+.zd-bar .zd-btn{border-radius:16px;}
 /* ===== v2: end-call button, chat menu, cover photo, human marker ===== */
 #callOverlay > button.call-endfab{display:none;position:absolute;left:50%;bottom:calc(26px + var(--safe-b,0px));transform:translateX(-50%);width:68px;height:68px;border-radius:50%;border:0;background:#E5334B;color:#fff;font-size:24px;align-items:center;justify-content:center;z-index:7;box-shadow:0 8px 24px rgba(229,51,75,.55);}
 #callOverlay.vid > button.call-endfab,#callOverlay.vidlive > button.call-endfab{display:flex;}
@@ -1756,7 +1783,7 @@ html[data-theme=dark] .chat-menu{background:var(--surface);}
         <div class="trend-head">
           <span class="th-title">Trending Services</span>
           <span class="see-all" onclick="seeAllNearYou()">See All</span>
-          <div class="tog-row"><div class="sm-tog" id="smTog" data-on="services" role="group" aria-label="Services or Marketplace"><span class="sm-thumb"></span><button type="button" data-s="services" aria-label="Services"><i class="fa-solid fa-fire"></i>Services</button><button type="button" data-s="market" onclick="smGo()" aria-label="Open Marketplace"><i class="fa-solid fa-bag-shopping"></i>Market</button><span class="sm-dot"></span></div><div class="doc-tog" role="group" aria-label="CV and Letter builder"><button type="button" data-d="cv" onclick="openDocs('cv')" aria-label="CV builder"><i class="fa-solid fa-id-card-clip"></i>CV</button><button type="button" data-d="letter" onclick="openDocs('letter')" aria-label="Letter builder"><i class="fa-solid fa-envelope-open-text"></i>Letter</button></div></div>
+          <div class="tog-row"><div class="sm-tog" id="smTog" data-on="services" role="group" aria-label="Services or Marketplace"><span class="sm-thumb"></span><button type="button" data-s="services" aria-label="Services"><i class="fa-solid fa-fire"></i>Services</button><button type="button" data-s="market" onclick="smGo()" aria-label="Open Marketplace"><i class="fa-solid fa-bag-shopping"></i>Market</button><span class="sm-dot"></span></div><div class="doc-tog" role="group" aria-label="CV and Letter builder"><button type="button" data-d="cv" onclick="openDocs('cv')" aria-label="CV builder"><i class="fa-solid fa-id-card-clip"></i>CV</button><button type="button" data-d="letter" onclick="openDocs('letter')" aria-label="Letter builder"><i class="fa-solid fa-envelope-open-text"></i>Letter</button><button type="button" data-d="quote" onclick="openDocs('quote')" aria-label="Quotation builder"><i class="fa-solid fa-file-signature"></i>Quote</button><button type="button" data-d="invoice" onclick="openDocs('invoice')" aria-label="Invoice builder"><i class="fa-solid fa-file-invoice-dollar"></i>Invoice</button></div></div>
         </div>
         <div class="trend-scroll" id="trendingScroll"></div>
       </div>
@@ -3393,6 +3420,7 @@ function postContactHtml(l, kind){
   return `<div class="pcontact">
     ${wa ? `<a class="pc-btn pc-wa" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener" aria-label="Message on WhatsApp" onclick="event.stopPropagation()"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
     ${tel ? `<a class="pc-btn pc-call" href="tel:${escapeHtml(tel)}" aria-label="Call" onclick="event.stopPropagation()"><i class="fa-solid fa-phone"></i></a>` : ''}
+    ${canMsg && l.postType !== 'offer' ? `<button type="button" class="pc-btn pc-apply" aria-label="Apply with my CV" title="Apply with my CV" onclick="event.stopPropagation();zApply('${l.ownerId}')"><i class="fa-solid fa-id-card-clip"></i></button>` : ''}
     ${canMsg ? `<button type="button" class="pc-btn pc-msg" aria-label="Send a message in ZimPro" onclick="event.stopPropagation();msgOwnerById('${l.ownerId}')"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#zplMsgG)" d="M5 3h14a4 4 0 0 1 4 4v7a4 4 0 0 1-4 4h-6.2l-4.6 3.6a.8.8 0 0 1-1.3-.6V18H5a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4z"/><circle cx="7.6" cy="10.5" r="1.5" fill="#fff"/><circle cx="12" cy="10.5" r="1.5" fill="#fff"/><circle cx="16.4" cy="10.5" r="1.5" fill="#fff"/></svg></button>` : ''}
   </div>`;
 }
@@ -3820,7 +3848,7 @@ async function cloudUpload(fileOrBlob, opts){
 async function cloudUploadImage(file, maxDim){
   const dec = await decodeImage(file);
   try{
-    const blob = await imgToBlob(dec, maxDim || 1600, 0.85);     // shrink on the phone first = far less mobile data
+    const blob = await imgToBlob(dec, maxDim || 4096, 0.97);     // maximum quality: keep (almost) the full photo
     return await cloudUpload(blob, { fileName: 'photo.jpg' });
   } finally { dec.close(); }
 }
@@ -3837,7 +3865,7 @@ function warnCloudFallback(err){
 async function compressImageToDataURL(file, opts){
   opts = opts || {};
   if(cloudReady()){
-    try{ return await cloudUploadImage(file, Math.max(600, (opts.maxDim || 900) * 2)); }
+    try{ return await cloudUploadImage(file, 4096); }
     catch(err){ warnCloudFallback(err); }
   }
   const dec = await decodeImage(file);
@@ -3873,7 +3901,7 @@ async function compressToBudget(file, budgetChars){
 // One photo: ImageKit if configured (falls back to Firestore if it is unreachable).
 async function prepareImage(file, budgetChars, cloudDim){
   if(cloudReady()){
-    try{ return await cloudUploadImage(file, cloudDim || 1600); }
+    try{ return await cloudUploadImage(file, 4096); }
     catch(err){ warnCloudFallback(err); }
   }
   return compressToBudget(file, budgetChars);
@@ -3926,7 +3954,7 @@ async function handlePostPhotoPick(e){
       try{ const d = await getVideoDuration(f); if(d > 61){ toast('Each video must be 60 seconds or shorter.', true); continue; } }
       catch(err){ toast(err.message || 'Could not use that video.', true); continue; }
       pjMedia.push({ file:f, type:'video', preview:URL.createObjectURL(f) });
-    } else { const cf = await zplCrop(f, 4 / 3, 1280); if(!cf) continue; pjMedia.push({ file:cf, type:'image', preview:URL.createObjectURL(cf) }); }
+    } else { const cf = await zplCrop(f, 4 / 3, 3200); if(!cf) continue; pjMedia.push({ file:cf, type:'image', preview:URL.createObjectURL(cf) }); }
   }
   pjMediaRender();
 }
@@ -4107,7 +4135,7 @@ async function handleMyPhotoPick(e){
   const file = e.target.files && e.target.files[0];
   if(!file || !currentUser) return;
   e.target.value = '';
-  const cropped = await zplCrop(file, 1, 600); if(!cropped) return;
+  const cropped = await zplCrop(file, 1, 1600); if(!cropped) return;
   try{
     if(!fb()){ toast('Not connected yet — try again shortly.', true); return; }
     const url = await compressImageToDataURL(cropped, { maxDim:500, quality:0.75, maxBytes:120000 });
@@ -5480,7 +5508,7 @@ function renderPostDetailCard(){
       <button type="button" onclick="shareListing('${l.id}')"><i class="fa-solid fa-share"></i> Share</button>
     </div>
     ${mine ? '' : `<div class="pd-contact">
-      <button type="button" class="btn btn-blue" onclick="msgOwnerById('${escapeHtml(l.ownerId || '')}')"><i class="fa-regular fa-comment"></i> Message</button>
+      <button type="button" class="btn btn-blue" onclick="msgOwnerById('${escapeHtml(l.ownerId || '')}')"><i class="fa-regular fa-comment"></i> Message</button>${l.postType !== 'offer' ? `<button type="button" class="btn btn-apply" onclick="zApply('${escapeHtml(l.ownerId || '')}')"><i class="fa-solid fa-id-card-clip"></i> Apply with my CV</button>` : ''}
       ${l.postType === 'offer' ? `<button type="button" class="btn btn-ghost" onclick="pdHire()"><i class="fa-solid fa-handshake"></i> Hire Now</button>` : ''}
       ${tel ? `<a class="btn btn-ghost ic" href="tel:${escapeHtml(tel)}" aria-label="Call"><i class="fa-solid fa-phone"></i></a>` : ''}
       ${wa ? `<a class="btn btn-ghost ic" target="_blank" rel="noopener" href="https://wa.me/${wa}?text=${wmsg}" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" style="color:#1EBE5A"></i></a>` : ''}
@@ -6036,7 +6064,7 @@ function zplCrop(file, aspect, outW){
       ov.querySelector('[data-ok]').onclick = () => {
         const s = base() * z, o = document.createElement('canvas'); o.width = outW; o.height = Math.round(outW / aspect);
         o.getContext('2d').drawImage(img, cx - W / 2 / s, cy - H / 2 / s, W / s, H / s, 0, 0, o.width, o.height);
-        o.toBlob(b => done(b ? new File([b], 'crop.jpg', { type:'image/jpeg' }) : file), 'image/jpeg', 0.88);
+        o.toBlob(b => done(b ? new File([b], 'crop.jpg', { type:'image/jpeg' }) : file), 'image/jpeg', 0.97);
       };
     };
     img.src = url;
@@ -6089,9 +6117,9 @@ async function chatReportUser(){
 async function handleMyCoverPick(e){
   const f0 = e.target.files && e.target.files[0]; e.target.value = ''; if(!f0) return;
   try{
-    const f = await zplCrop(f0, 2.5, 1200); if(!f) return;
+    const f = await zplCrop(f0, 2.5, 2400); if(!f) return;
     toast('Uploading cover…');
-    const url = await prepareImage(f, 180000, 1200);
+    const url = await prepareImage(f, 180000, 4096);
     await fb().setDoc(fb().doc(fb().db, 'users', currentUser.uid), { cover: url }, { merge:true });
     currentUser.cover = url; zplPaintMyCover(true); toast('Cover photo updated.');
   } catch(err){ console.error('cover failed', err); toast(friendlyUploadError(err, 'Could not upload cover photo.') + (err && err.code ? ' (' + err.code + ')' : ''), true); }
@@ -6113,6 +6141,7 @@ const zD = (() => {
     lt:{ type:'job', date:today(), toName:'', toCo:'', toAddr:'', pos:'', last:'', subject:'', body:'', close:'Yours sincerely,' } };
   try{ const j = JSON.parse(localStorage.getItem('zplDocsV1') || 'null'); if(j) Object.assign(S, j); }catch(e){}
   S.cv.cert = S.cv.cert || []; S.cv.proj = S.cv.proj || [];
+  S.qt = S.qt || { logo:'', kind:'Quotation', biz:'', bizPhone:'', bizEmail:'', bizAddr:'', client:'', clientPhone:'', no:'', date:today(), cur:'USD', items:[{ d:'', q:1, p:'' }], notes:'Thank you for your business.' };
   const save = () => { try{ localStorage.setItem('zplDocsV1', JSON.stringify(S)); }catch(e){} };
   const COLORS = ['#1877F2', '#0B3D91', '#0E9F6E', '#E5334B', '#7C3AED', '#111827'];
   const list = v => String(v || '').split(/[,\n]/).map(x => x.trim()).filter(Boolean);
@@ -6150,28 +6179,35 @@ const zD = (() => {
     const rec = [l.toName, l.toCo, l.toAddr].filter(Boolean).map(E).join('<br>');
     const send = [c.phone, c.email, c.place].filter(Boolean).map(E).join('<br>');
     const body = `<div style="margin:26px 0 4px;color:#4b5563">${E(l.date)}</div><div style="margin:14px 0 20px;line-height:1.55">${rec}</div><div style="margin-bottom:10px">Dear ${E(l.toName) || 'Hiring Manager'},</div>${l.subject ? `<div style="font-weight:800;margin:0 0 14px;text-transform:uppercase;font-size:13px;letter-spacing:.03em">${E(l.subject)}</div>` : ''}${ps}<div style="margin-top:20px">${E(l.close)}</div><div style="margin-top:34px;font:800 16px Sora,sans-serif;color:var(--ac)">${E(c.name)}</div>`;
-    if(S.ltpl === 'modern') return `<div style="display:flex;min-height:1123px"><div style="width:14px;background:var(--ac);flex:none"></div><div style="flex:1;padding:50px 56px"><div style="font:800 30px/1.1 Sora,sans-serif;color:var(--ac)">${E(c.name) || 'Your Name'}</div><div style="color:#4b5563;margin-top:8px;font-size:12.5px;line-height:1.5">${send}</div><div style="height:2px;background:#e5e7eb;margin-top:16px"></div>${body}</div></div>`;
-    if(S.ltpl === 'elegant') return `<div style="padding:54px 64px;font-family:Georgia,'Times New Roman',serif"><div style="text-align:center"><div style="font:400 30px Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ac)">${E(c.name) || 'Your Name'}</div><div style="margin:12px auto 0;width:90px;height:2px;background:var(--ac)"></div><div style="color:#4b5563;margin-top:12px;font-size:12.5px">${[c.phone, c.email, c.place].filter(Boolean).map(E).join(' &nbsp;|&nbsp; ')}</div></div>${body}</div>`;
-    return `<div style="padding:56px 64px"><div style="text-align:right;color:#374151;line-height:1.55"><b style="font-size:15px">${E(c.name) || 'Your Name'}</b><br>${send}</div><div style="height:3px;background:var(--ac);margin:18px 0 0"></div>${body}</div>`;
+    if(S.ltpl === 'modern') return `<div style="display:flex;min-height:1123px"><div style="width:14px;background:var(--ac);flex:none"></div><div style="flex:1;padding:50px 56px"><div style="color:#4b5563;font-size:12.5px;line-height:1.55;text-align:right">${send}</div><div style="height:3px;background:var(--ac);margin-top:16px"></div>${body}</div></div>`;
+    if(S.ltpl === 'elegant') return `<div style="padding:54px 64px;font-family:Georgia,'Times New Roman',serif"><div style="text-align:center"><div style="color:#4b5563;font-size:12.5px;line-height:1.6">${[c.phone, c.email, c.place].filter(Boolean).map(E).join(' &nbsp;|&nbsp; ')}</div><div style="margin:12px auto 0;width:90px;height:2px;background:var(--ac)"></div></div>${body}</div>`;
+    return `<div style="padding:56px 64px"><div style="text-align:right;color:#374151;line-height:1.55">${send}</div><div style="height:3px;background:var(--ac);margin:18px 0 0"></div>${body}</div>`;
   }
-  const inp = (lab, p, v, t) => `<label>${lab}</label><input ${t ? `type="${t}"` : ''} data-p="${p}" value="${E(v)}" oninput="zD.i(this)">`;
-  const area = (lab, p, v, ph2) => `<label>${lab}</label><textarea data-p="${p}" placeholder="${E(ph2 || '')}" oninput="zD.i(this)">${E(v)}</textarea>`;
+  const IC = { name:'user', title:'briefcase', phone:'phone', bizPhone:'phone', clientPhone:'phone', email:'envelope', bizEmail:'envelope', place:'location-dot', bizAddr:'location-dot', toAddr:'location-dot', summary:'align-left', skills:'bolt', langs:'language', refs:'user-check', r:'briefcase', c:'building', d:'calendar', b:'list-check', q:'graduation-cap', s:'school', res:'award', n:'certificate', i:'building-columns', y:'calendar', t:'code', w:'lightbulb', m:'hammer', l:'link', date:'calendar-day', toName:'user-tie', toCo:'building', pos:'bullseye', last:'calendar-xmark', subject:'heading', body:'pen-nib', close:'signature', biz:'store', no:'hashtag', client:'user', notes:'note-sticky', kind:'file-lines', cur:'coins', type:'envelope-open-text' };
+  const ico = p => { const k = p.split('.'), last = k[k.length - 1]; if(k.includes('items')) return { d:'box-open', q:'hashtag', p:'tag' }[last]; if(k.includes('proj') && last === 'n') return 'diagram-project'; return IC[last] || 'pen'; };
+  const inp = (lab, p, v, t) => `<div class="zd-f"><i class="fa-solid fa-${ico(p)}"></i><div><span>${lab}</span><input ${t ? `type="${t}"` : ''} data-p="${p}" value="${E(v)}" oninput="zD.i(this)"></div></div>`;
+  const area = (lab, p, v, ph2) => `<div class="zd-f area"><i class="fa-solid fa-${ico(p)}"></i><div><span>${lab}</span><textarea data-p="${p}" placeholder="${E(ph2 || '')}" oninput="zD.i(this)">${E(v)}</textarea></div></div>`;
+  const sel = (lab, p, opts, oc) => `<div class="zd-f"><i class="fa-solid fa-${ico(p)}"></i><div><span>${lab}</span><select data-p="${p}" onchange="${oc || 'zD.i(this)'}">${opts}</select></div></div>`;
+  const hd = (ic, t, col, sub) => `<h4><span class="zd-ic" style="background:${col}"><i class="fa-solid fa-${ic}"></i></span><div>${t}${sub ? `<small>${sub}</small>` : ''}</div></h4>`;
+  const addb = (fn, t) => `<button class="zd-btn alt zd-add" onclick="${fn}"><i class="fa-solid fa-plus"></i> ${t}</button>`;
+  const rmb = fn => `<button class="zd-btn red zd-rm" onclick="${fn}"><i class="fa-regular fa-trash-can"></i> Remove</button>`;
+  const G = { blue:'linear-gradient(135deg,#1877F2,#0B3D91)', violet:'linear-gradient(135deg,#8B5CF6,#6D28D9)', amber:'linear-gradient(135deg,#FBBF24,#D97706)', green:'linear-gradient(135deg,#10B981,#047857)', cyan:'linear-gradient(135deg,#22D3EE,#0891B2)', red:'linear-gradient(135deg,#F87171,#DC2626)' };
+  const pick = (id, has, lab, fnPick, fnRm, sq) => `<div class="zd-photo">${has ? `<img class="zd-thumb ${sq ? 'zd-sq' : ''}" src="${has}" alt="">` : `<div class="zd-thumb ${sq ? 'zd-sq' : ''}"><i class="fa-regular fa-image"></i></div>`}<label for="${id}" class="zd-btn alt zd-pick">${has ? 'Change' : 'Upload'}</label><input id="${id}" type="file" accept="image/*" onchange="${fnPick}" style="display:none">${has ? `<button class="zd-btn red zd-pick" onclick="${fnRm}">Remove</button>` : ''}</div>`;
   function form(){
     const c = S.cv, l = S.lt;
-    if(S.mode === 'cv') return `<div class="zd-card"><h4>👤 About you</h4>
-      <label>Photo (optional)</label><div class="zd-photo">${c.photo ? `<img class="zd-thumb" src="${c.photo}" alt="">` : '<div class="zd-thumb">👤</div>'}<label for="zdPhoto" class="zd-btn alt" style="margin:0;color:#1877F2;font-size:14px">${c.photo ? 'Change photo' : 'Choose photo'}</label><input id="zdPhoto" type="file" accept="image/*" onchange="zD.photo(event)" style="display:none">${c.photo ? '<button class="zd-btn red" onclick="zD.nophoto()">Remove</button>' : ''}</div>
-      ${inp('Full name', 'cv.name', c.name)}${inp('Job title', 'cv.title', c.title)}${inp('Phone', 'cv.phone', c.phone, 'tel')}${inp('Email', 'cv.email', c.email, 'email')}${inp('Town / city', 'cv.place', c.place)}
-      ${area('Profile (2–3 sentences)', 'cv.summary', c.summary, 'Hard-working and reliable… with experience in…')}</div>
-      <div class="zd-card"><h4>💼 Work experience</h4>${c.exp.map((x, i) => `<div class="${i ? 'zd-sub' : ''}">${inp('Job title', 'cv.exp.' + i + '.r', x.r)}${inp('Company', 'cv.exp.' + i + '.c', x.c)}${inp('Dates (e.g. 2021 – 2024)', 'cv.exp.' + i + '.d', x.d)}${area('What you did (one point per line)', 'cv.exp.' + i + '.b', x.b)}${c.exp.length > 1 ? `<button class="zd-btn red" style="margin-top:8px" onclick="zD.del('exp',${i})">Remove</button>` : ''}</div>`).join('')}<button class="zd-btn alt" style="margin-top:10px" onclick="zD.add('exp')">+ Add job</button></div>
-      <div class="zd-card"><h4>🎓 Education</h4>${c.edu.map((x, i) => `<div class="${i ? 'zd-sub' : ''}">${inp('Qualification', 'cv.edu.' + i + '.q', x.q)}${inp('School / college', 'cv.edu.' + i + '.s', x.s)}${inp('Dates', 'cv.edu.' + i + '.d', x.d)}${inp('Results (optional) — e.g. 5 O-Levels, 3.6 GPA, Distinction', 'cv.edu.' + i + '.res', x.res)}${c.edu.length > 1 ? `<button class="zd-btn red" style="margin-top:8px" onclick="zD.del('edu',${i})">Remove</button>` : ''}</div>`).join('')}<button class="zd-btn alt" style="margin-top:10px" onclick="zD.add('edu')">+ Add education</button></div>
-      <div class="zd-card"><h4>🏅 Certifications &amp; training</h4><div class="zd-hint">Courses, licences and short trainings (e.g. First Aid, Cisco, Google, driving licence).</div>${c.cert.map((x, i) => `<div class="${i ? 'zd-sub' : ''}">${inp('Certificate / course', 'cv.cert.' + i + '.n', x.n)}${inp('Issued by', 'cv.cert.' + i + '.i', x.i)}${inp('Year', 'cv.cert.' + i + '.y', x.y)}<button class="zd-btn red" style="margin-top:8px" onclick="zD.del('cert',${i})">Remove</button></div>`).join('')}<button class="zd-btn alt" style="margin-top:10px" onclick="zD.add('cert')">+ Add certificate or training</button></div>
-      <div class="zd-card"><h4>💻 Projects <span style="font:600 11px Inter,sans-serif;color:#64748b">(optional · great for IT / software)</span></h4><div class="zd-hint">Explain briefly what each project does and what <b>you personally</b> built.</div>${c.proj.map((x, i) => `<div class="${i ? 'zd-sub' : ''}">${inp('Project name', 'cv.proj.' + i + '.n', x.n)}${inp('Tech used (optional)', 'cv.proj.' + i + '.t', x.t)}${area('What the project does', 'cv.proj.' + i + '.w', x.w, 'A web app that helps schools manage fees and results…')}${area('What you personally built', 'cv.proj.' + i + '.m', x.m, 'I built the login, the database and the payment screens…')}${inp('Link (optional)', 'cv.proj.' + i + '.l', x.l)}<button class="zd-btn red" style="margin-top:8px" onclick="zD.del('proj',${i})">Remove</button></div>`).join('')}<button class="zd-btn alt" style="margin-top:10px" onclick="zD.add('proj')">+ Add project</button></div>
-      <div class="zd-card"><h4>⚡ Skills &amp; more</h4>${area('Skills (separate with commas)', 'cv.skills', c.skills, 'Customer service, Microsoft Excel, Driving')}${area('Languages (commas)', 'cv.langs', c.langs, 'English, Shona, Ndebele')}${inp('References', 'cv.refs', c.refs)}</div>`;
-    return `<div class="zd-card"><h4>✉️ Letter details</h4><label>Type of letter</label><select data-p="lt.type" onchange="zD.i(this);zD.render()"><option value="job" ${l.type === 'job' ? 'selected' : ''}>Job application</option><option value="resign" ${l.type === 'resign' ? 'selected' : ''}>Resignation</option><option value="request" ${l.type === 'request' ? 'selected' : ''}>Formal request</option></select>
-      ${inp('Your name', 'cv.name', c.name)}${inp('Your phone', 'cv.phone', c.phone, 'tel')}${inp('Your email', 'cv.email', c.email, 'email')}${inp('Your town / city', 'cv.place', c.place)}${inp('Date', 'lt.date', l.date)}
-      ${inp('Send to (name, or leave empty)', 'lt.toName', l.toName)}${inp('Company / organisation', 'lt.toCo', l.toCo)}${inp('Their address (optional)', 'lt.toAddr', l.toAddr)}
-      ${inp(l.type === 'job' ? 'Position you are applying for' : l.type === 'request' ? 'What you are requesting' : 'Your position', 'lt.pos', l.pos)}${l.type === 'resign' ? inp('Last working day', 'lt.last', l.last) : ''}${inp('Subject line (optional)', 'lt.subject', l.subject)}</div>
-      <div class="zd-card"><h4>📝 The letter</h4><button class="zd-btn" onclick="zD.gen()">✨ Write it for me</button>${area('Letter body (edit freely)', 'lt.body', l.body, 'Tap “Write it for me” to get a professional first draft.')}${inp('Closing', 'lt.close', l.close)}</div>`;
+    if(S.mode === 'quote') return qtForm();
+    if(S.mode === 'cv') return `<div class="zd-card">${hd('user', 'About you', G.blue)}
+      <div class="zd-f"><i class="fa-solid fa-camera"></i><div><span>Photo (optional)</span>${pick('zdPhoto', c.photo, 'photo', 'zD.photo(event)', 'zD.nophoto()')}</div></div>
+      ${inp('Full name', 'cv.name', c.name)}${inp('Job title', 'cv.title', c.title)}${inp('Phone', 'cv.phone', c.phone, 'tel')}${inp('Email', 'cv.email', c.email, 'email')}${inp('Town / city', 'cv.place', c.place)}${area('Profile — 2 to 3 sentences', 'cv.summary', c.summary, 'Hard-working and reliable, with experience in…')}</div>
+      <div class="zd-card">${hd('briefcase', 'Work experience', G.violet)}${c.exp.map((x, i) => `<div class="${i ? 'zd-sub' : ''}">${inp('Job title', 'cv.exp.' + i + '.r', x.r)}${inp('Company', 'cv.exp.' + i + '.c', x.c)}${inp('Dates (e.g. 2021 – 2024)', 'cv.exp.' + i + '.d', x.d)}${area('What you did — one point per line', 'cv.exp.' + i + '.b', x.b)}${c.exp.length > 1 ? rmb(`zD.del('exp',${i})`) : ''}</div>`).join('')}${addb("zD.add('exp')", 'Add job')}</div>
+      <div class="zd-card">${hd('graduation-cap', 'Education', G.amber)}${c.edu.map((x, i) => `<div class="${i ? 'zd-sub' : ''}">${inp('Qualification', 'cv.edu.' + i + '.q', x.q)}${inp('School / college', 'cv.edu.' + i + '.s', x.s)}${inp('Dates', 'cv.edu.' + i + '.d', x.d)}${inp('Results (optional) — e.g. 5 O-Levels, 3.6 GPA', 'cv.edu.' + i + '.res', x.res)}${c.edu.length > 1 ? rmb(`zD.del('edu',${i})`) : ''}</div>`).join('')}${addb("zD.add('edu')", 'Add education')}</div>
+      <div class="zd-card">${hd('certificate', 'Certifications & training', G.green, 'Courses, licences and short trainings')}${c.cert.map((x, i) => `<div class="${i ? 'zd-sub' : ''}">${inp('Certificate / course', 'cv.cert.' + i + '.n', x.n)}${inp('Issued by', 'cv.cert.' + i + '.i', x.i)}${inp('Year', 'cv.cert.' + i + '.y', x.y)}${rmb(`zD.del('cert',${i})`)}</div>`).join('')}${addb("zD.add('cert')", 'Add certificate or training')}</div>
+      <div class="zd-card">${hd('diagram-project', 'Projects', G.cyan, 'Optional · great for IT & software roles')}<div class="zd-hint">Explain briefly what each project does and what <b>you personally</b> built.</div>${c.proj.map((x, i) => `<div class="${i ? 'zd-sub' : ''}">${inp('Project name', 'cv.proj.' + i + '.n', x.n)}${inp('Tech used (optional)', 'cv.proj.' + i + '.t', x.t)}${area('What the project does', 'cv.proj.' + i + '.w', x.w, 'A web app that helps schools manage fees and results…')}${area('What you personally built', 'cv.proj.' + i + '.m', x.m, 'I built the login, the database and the payment screens…')}${inp('Link (optional)', 'cv.proj.' + i + '.l', x.l)}${rmb(`zD.del('proj',${i})`)}</div>`).join('')}${addb("zD.add('proj')", 'Add project')}</div>
+      <div class="zd-card">${hd('bolt', 'Skills & languages', G.red)}${area('Skills — separate with commas', 'cv.skills', c.skills, 'Customer service, Microsoft Excel, Driving')}${area('Languages — separate with commas', 'cv.langs', c.langs, 'English, Shona, Ndebele')}${inp('References', 'cv.refs', c.refs)}</div>`;
+    return `<div class="zd-card">${hd('envelope-open-text', 'Letter details', G.blue)}${sel('Type of letter', 'lt.type', `<option value="job" ${l.type === 'job' ? 'selected' : ''}>Job application</option><option value="resign" ${l.type === 'resign' ? 'selected' : ''}>Resignation</option><option value="request" ${l.type === 'request' ? 'selected' : ''}>Formal request</option>`, 'zD.i(this);zD.render()')}
+      ${inp('Your name (for the signature)', 'cv.name', c.name)}${inp('Your phone', 'cv.phone', c.phone, 'tel')}${inp('Your email', 'cv.email', c.email, 'email')}${inp('Your town / city', 'cv.place', c.place)}${inp('Date', 'lt.date', l.date)}</div>
+      <div class="zd-card">${hd('user-tie', 'Who is it for?', G.violet)}${inp('Send to (name, or leave empty)', 'lt.toName', l.toName)}${inp('Company / organisation', 'lt.toCo', l.toCo)}${inp('Their address (optional)', 'lt.toAddr', l.toAddr)}${inp(l.type === 'job' ? 'Position you are applying for' : l.type === 'request' ? 'What you are requesting' : 'Your position', 'lt.pos', l.pos)}${l.type === 'resign' ? inp('Last working day', 'lt.last', l.last) : ''}${inp('Subject line (optional)', 'lt.subject', l.subject)}</div>
+      <div class="zd-card">${hd('pen-nib', 'The letter', G.green)}<button class="zd-btn zd-magic" onclick="zD.gen()"><i class="fa-solid fa-wand-magic-sparkles"></i> Write it for me</button>${area('Letter body — edit freely', 'lt.body', l.body, 'Tap “Write it for me” to get a professional first draft.')}${inp('Closing', 'lt.close', l.close)}</div>`;
   }
   const ln = (l, t, w) => `<u style="left:${l}%;top:${t}%;width:${w}%;height:4px;border-radius:2px;background:#cbd5e1"></u>`;
   const MINI = a => ({
@@ -6184,6 +6220,7 @@ const zD = (() => {
   });
   function chipsRow(){
     const sw = `<div class="zd-row">${COLORS.map(x => `<span class="zd-sw ${S.color === x ? 'on' : ''}" style="background:${x}" onclick="zD.col('${x}')"></span>`).join('')}</div>`;
+    if(S.mode === 'quote') return sw;
     if(S.mode === 'cv'){
       const t = [['exec', 'Executive'], ['band', 'Modern'], ['clean', 'Classic'], ['right', 'Sidebar'], ['dark', 'Midnight'], ['creative', 'Creative']], m = MINI(S.color);
       return `<div class="zd-tpls">${t.map(x => `<button class="zd-tpl ${S.tpl === x[0] ? 'on' : ''}" onclick="zD.tpl('${x[0]}')"><div class="zd-mini">${m[x[0]]}</div>${x[1]}</button>`).join('')}</div>${sw}`;
@@ -6191,7 +6228,7 @@ const zD = (() => {
     const t = [['formal', 'Formal'], ['modern', 'Modern'], ['elegant', 'Elegant']];
     return `<div class="zd-row">${t.map(x => `<button class="zd-chip ${S.ltpl === x[0] ? 'on' : ''}" onclick="zD.tpl('${x[0]}')">${x[1]}</button>`).join('')}</div>${sw}`;
   }
-  const paper = () => S.mode === 'cv' ? cvHtml() : ltHtml();
+  const paper = () => S.mode === 'cv' ? cvHtml() : S.mode === 'quote' ? qtHtml() : ltHtml();
   function fit(){
     const w = document.getElementById('zdWrap'), p = document.getElementById('zdPaper'); if(!w || !p) return;
     const sc = Math.min(1, (w.clientWidth - 20) / 794); p.style.transform = 'scale(' + sc + ')';
@@ -6200,22 +6237,79 @@ const zD = (() => {
   function prev(){ const p = document.getElementById('zdPaper'); if(!p) return; p.style.setProperty('--ac', S.color); p.innerHTML = paper(); fit(); }
   function render(){
     const r = document.getElementById('docsRoot'); if(!r) return;
-    r.innerHTML = `<div class="zd-hero"><b>CV &amp; Letter Builder</b><span>Pick a design, fill in your details, download a professional PDF.</span></div>
-      <div class="zd-tabs"><button class="${S.mode === 'cv' ? 'on' : ''}" onclick="zD.mode('cv')">📄 CV</button><button class="${S.mode === 'letter' ? 'on' : ''}" onclick="zD.mode('letter')">✉️ Letter</button></div>
-      <div style="font:800 13px Sora,sans-serif;margin:4px 0 8px">1 · Choose a design</div>${chipsRow()}
-      <div style="font:800 13px Sora,sans-serif;margin:8px 0">2 · Fill in your details</div>${form()}
-      <div style="font:800 13px Sora,sans-serif;margin:8px 0">3 · Live preview</div><div id="zdWrap"><div id="zdPaper"></div></div>
-      <div style="font-size:12px;color:#64748b;margin:8px 0 14px">Tip: in the print window choose <b>Save as PDF</b>, then share the file on WhatsApp or email.</div>
-      <div class="zd-bar"><button class="zd-btn" style="flex:1;height:48px;font-size:15px" onclick="zD.print()">⬇ Download PDF</button></div>`;
-    prev();
+    const tab = (m, ic, t) => `<button class="${S.mode === m ? 'on' : ''}" onclick="zD.mode('${m}')"><i class="fa-solid fa-${ic}"></i>${t}</button>`;
+    const step = (n, t) => `<div class="zd-step"><b>${n}</b>${t}</div>`;
+    r.innerHTML = `<div class="zd-hero"><i class="fa-solid fa-wand-magic-sparkles"></i><div><b>Document Studio</b><span>CVs, letters, quotes and invoices — designed for you.</span></div></div>
+      <div class="zd-tabs">${tab('cv', 'id-card-clip', 'CV')}${tab('letter', 'envelope-open-text', 'Letter')}${tab('quote', 'file-invoice-dollar', 'Quote &amp; Invoice')}</div><div class="zd-card" id="zdMine" style="display:none"></div>
+      ${step(1, S.mode === 'quote' ? 'Choose a colour' : 'Choose a design')}${chipsRow()}
+      ${step(2, 'Fill in your details')}${form()}
+      ${step(3, 'Live preview')}<div id="zdWrap"><div id="zdPaper"></div></div>
+      <div class="zd-hint" style="margin:8px 0 14px"><i class="fa-solid fa-circle-info"></i> In the print window choose <b>Save as PDF</b>, then share the file on WhatsApp or email.</div>
+      <div class="zd-bar"><button class="zd-btn alt" style="height:50px;font-size:15px" onclick="zD.saveDoc()"><i class="fa-solid fa-floppy-disk"></i> Save</button><button class="zd-btn" style="flex:1;height:50px;font-size:15px" onclick="zD.print()"><i class="fa-solid fa-file-arrow-down"></i> Download PDF</button></div>`;
+    prev(); loadDocs();
   }
   function setP(path, val){ const k = path.split('.'); let o = S; for(let i = 0; i < k.length - 1; i++) o = o[k[i]]; o[k[k.length - 1]] = val; }
+  S.qt.logo = S.qt.logo || '';
+  const money = n => ({ USD:'$', ZAR:'R ', ZWL:'ZWL ' }[S.qt.cur] || '$') + (Math.round(n * 100) / 100).toFixed(2);
+  function qtHtml(){
+    const q = S.qt, rows = q.items.filter(x => x.d || +x.p), tot = rows.reduce((a, x) => a + (+x.q || 0) * (+x.p || 0), 0), rc = q.kind === 'Receipt';
+    return `<div style="padding:46px 50px;min-height:1123px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:4px solid var(--ac);padding-bottom:18px"><div>${q.logo ? `<img src="${q.logo}" alt="" style="max-height:72px;max-width:200px;object-fit:contain;display:block;margin-bottom:12px">` : ''}<div style="font:800 26px/1.1 Sora,sans-serif;color:var(--ac)">${E(q.biz) || 'Your Business'}</div><div style="color:#4b5563;font-size:12.5px;margin-top:8px;line-height:1.5">${[q.bizAddr, q.bizPhone, q.bizEmail].filter(Boolean).map(E).join('<br>')}</div></div><div style="text-align:right"><div style="font:800 28px Sora,sans-serif;letter-spacing:.08em;text-transform:uppercase">${E(q.kind)}</div><div style="color:#4b5563;font-size:12.5px;margin-top:8px">${q.no ? 'No. ' + E(q.no) + '<br>' : ''}${E(q.date)}</div></div></div><div style="margin:22px 0 14px"><div style="font:800 11px Sora,sans-serif;letter-spacing:.14em;color:var(--ac)">${rc ? 'RECEIVED FROM' : 'PREPARED FOR'}</div><div style="font-weight:700;margin-top:4px">${E(q.client) || '—'}</div><div style="color:#4b5563">${E(q.clientPhone)}</div></div><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:var(--ac);color:#fff"><th style="text-align:left;padding:9px 10px">Description</th><th style="padding:9px 10px;width:60px">Qty</th><th style="text-align:right;padding:9px 10px;width:100px">Price</th><th style="text-align:right;padding:9px 10px;width:110px">Total</th></tr></thead><tbody>${rows.map(x => `<tr style="border-bottom:1px solid #e5e7eb"><td style="padding:9px 10px">${E(x.d)}</td><td style="padding:9px 10px;text-align:center">${E(x.q)}</td><td style="padding:9px 10px;text-align:right">${money(+x.p || 0)}</td><td style="padding:9px 10px;text-align:right">${money((+x.q || 0) * (+x.p || 0))}</td></tr>`).join('')}</tbody></table><div style="display:flex;justify-content:flex-end;margin-top:14px"><div style="min-width:240px;background:color-mix(in srgb,var(--ac) 10%,#fff);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;gap:20px;font:800 16px Sora,sans-serif"><span>${rc ? 'Amount paid' : 'Total'}</span><span style="color:var(--ac)">${money(tot)}</span></div></div>${q.notes ? `<div style="margin-top:28px;color:#4b5563;font-size:12.5px;white-space:pre-line">${E(q.notes)}</div>` : ''}</div>`;
+  }
+  const opt = (arr, cur) => arr.map(x => `<option ${cur === x ? 'selected' : ''}>${x}</option>`).join('');
+  function qtForm(){
+    const q = S.qt;
+    return `<div class="zd-card">${hd('file-invoice-dollar', 'Document', G.blue)}${sel('Type', 'qt.kind', opt(['Quotation', 'Invoice', 'Receipt'], q.kind))}
+      <div class="zd-f"><i class="fa-solid fa-image"></i><div><span>Your logo (optional)</span>${pick('zdLogo', q.logo, 'logo', 'zD.logo(event)', 'zD.nologo()', 1)}</div></div>
+      ${inp('Your business / name', 'qt.biz', q.biz)}${inp('Phone', 'qt.bizPhone', q.bizPhone, 'tel')}${inp('Email', 'qt.bizEmail', q.bizEmail, 'email')}${inp('Address / town', 'qt.bizAddr', q.bizAddr)}${inp('Document number (optional)', 'qt.no', q.no)}${inp('Date', 'qt.date', q.date)}${sel('Currency', 'qt.cur', opt(['USD', 'ZWL', 'ZAR'], q.cur))}</div>
+      <div class="zd-card">${hd('user', 'Client', G.violet)}${inp('Client name', 'qt.client', q.client)}${inp('Client phone (optional)', 'qt.clientPhone', q.clientPhone)}</div>
+      <div class="zd-card">${hd('list-check', 'Items', G.green)}${q.items.map((x, i) => `<div class="${i ? 'zd-sub' : ''}">${inp('Description', 'qt.items.' + i + '.d', x.d)}<div class="zd-two">${inp('Qty', 'qt.items.' + i + '.q', x.q, 'number')}${inp('Price each', 'qt.items.' + i + '.p', x.p, 'number')}</div>${q.items.length > 1 ? rmb(`zD.qdel(${i})`) : ''}</div>`).join('')}${addb('zD.qadd()', 'Add item')}${area('Notes — payment details, validity…', 'qt.notes', q.notes)}</div>`;
+  }
+  async function loadDocs(){
+    const box = document.getElementById('zdMine'); if(!box) return;
+    if(typeof currentUser === 'undefined' || !currentUser || typeof fb !== 'function' || !fb()) return;
+    try{
+      const snap = await fb().getDocs(fb().collection(fb().db, 'users', currentUser.uid, 'docs'));
+      const rows = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort((a, b) => (b.at || 0) - (a.at || 0));
+      box._rows = rows; box.style.display = rows.length ? 'block' : 'none';
+      box.innerHTML = rows.length ? '<h4>📁 My documents</h4>' + rows.map(r => `<div class="zd-doc"><div onclick="zD.load('${r.id}')"><b>${E(r.title)}</b><span>${E(r.kind)} · ${new Date(r.at || 0).toLocaleDateString('en-GB')} · tap to open</span></div><button onclick="zD.rm('${r.id}')" aria-label="Delete">🗑</button></div>`).join('') : '';
+    }catch(e){}
+  }
   window.addEventListener('resize', fit);
   return {
     open(){
       const u = (typeof currentUser !== 'undefined' && currentUser) || {};
       if(!S.cv.name) S.cv.name = u.name || ''; if(!S.cv.email) S.cv.email = u.email || ''; if(!S.cv.phone) S.cv.phone = u.phone || '';
       render();
+    },
+    async logo(e){ const f = e.target.files && e.target.files[0]; e.target.value = ''; if(!f) return; try{ S.qt.logo = await compressImageToDataURL(f, { maxDim:600, quality:0.95, maxBytes:120000 }); save(); render(); }catch(err){ toast('Could not use that logo.', true); } },
+    nologo(){ S.qt.logo = ''; save(); render(); },
+    setKind(k){ S.qt.kind = k; save(); render(); },
+    qadd(){ S.qt.items.push({ d:'', q:1, p:'' }); save(); render(); },
+    qdel(i){ S.qt.items.splice(i, 1); if(!S.qt.items.length) S.qt.items.push({ d:'', q:1, p:'' }); save(); render(); },
+    async saveDoc(){
+      if(typeof currentUser === 'undefined' || !currentUser){ toast('Please log in to save.', true); return; }
+      const kind = S.mode === 'cv' ? 'CV' : S.mode === 'letter' ? 'Letter' : S.qt.kind;
+      const nm = (S.mode === 'quote' ? (S.qt.client || S.qt.biz) : S.cv.name) || 'Untitled';
+      let id = S.docId; if(id && !confirm('Update your saved copy?\n\nOK = update it\nCancel = save as a new copy')) id = '';
+      id = id || ('d' + Date.now());
+      try{
+        await fb().setDoc(fb().doc(fb().db, 'users', currentUser.uid, 'docs', id), { kind, title: nm + ' – ' + kind, at: Date.now(), data: JSON.stringify({ mode:S.mode, tpl:S.tpl, ltpl:S.ltpl, color:S.color, cv:S.cv, lt:S.lt, qt:S.qt }) });
+        S.docId = id; save(); toast('Saved to your account.'); loadDocs();
+      } catch(e){ console.error(e); toast('Could not save — check your connection.', true); }
+    },
+    load(id){
+      const x = ((document.getElementById('zdMine') || {})._rows || []).find(y => y.id === id); if(!x) return;
+      try{ Object.assign(S, JSON.parse(x.data)); S.docId = id; S.cv.cert = S.cv.cert || []; S.cv.proj = S.cv.proj || []; save(); render(); toast('Opened.'); }catch(e){ toast('Could not open it.', true); }
+    },
+    async rm(id){
+      if(!confirm('Delete this saved document?')) return;
+      try{ await fb().deleteDoc(fb().doc(fb().db, 'users', currentUser.uid, 'docs', id)); if(S.docId === id) S.docId = ''; loadDocs(); }catch(e){ toast('Could not delete.', true); }
+    },
+    brief(){
+      const c = S.cv; if(!c.name || !(c.title || c.exp.some(x => x.r))) return '';
+      const ex = c.exp.filter(x => x.r).slice(0, 2).map(x => x.r + (x.c ? ' at ' + x.c : '') + (x.d ? ' (' + x.d + ')' : '')).join('; ');
+      const ed = c.edu.filter(x => x.q).slice(0, 1).map(x => x.q + (x.s ? ', ' + x.s : '')).join('');
+      return `Hello, I would like to apply for this job. My CV: ${c.name}${c.title ? ' – ' + c.title : ''}${c.phone ? ' • Phone: ' + c.phone : ''}${c.email ? ' • Email: ' + c.email : ''}${c.place ? ' • ' + c.place : ''}${c.skills ? ' • Skills: ' + list(c.skills).slice(0, 6).join(', ') : ''}${ex ? ' • Experience: ' + ex : ''}${ed ? ' • Education: ' + ed : ''}. I can send my full CV (PDF) if needed. Thank you.`;
     },
     render,
     i(el){ setP(el.dataset.p, el.value); save(); prev(); },
@@ -6240,7 +6334,14 @@ const zD = (() => {
   };
 })();
 window.addEventListener('afterprint', () => { const d = document.getElementById('zdPrint'); if(d) d.remove(); });
-function openDocs(mode){ try{ SCREEN_META.docs = { title:'CV & Letters', back:true, tab:'home' }; }catch(e){} showScreen('docs'); zD.open(); if(mode === 'cv' || mode === 'letter') zD.mode(mode); }
+async function zApply(ownerId){
+  if(!currentUser){ toast('Please log in first.', true); return; }
+  const t = zD.brief();
+  if(!t){ toast('Build your CV first, then tap Apply again.'); openDocs('cv'); return; }
+  await msgOwnerById(ownerId);
+  setTimeout(() => { const i = document.getElementById('chatInput'); if(i){ i.value = t; i.focus(); } toast('Your CV details are ready — tap send.'); }, 500);
+}
+function openDocs(mode){ try{ SCREEN_META.docs = { title:'CV & Letters', back:true, tab:'home' }; }catch(e){} showScreen('docs'); zD.open(); if(mode === 'cv' || mode === 'letter') zD.mode(mode); else if(mode === 'quote' || mode === 'invoice'){ zD.mode('quote'); zD.setKind(mode === 'invoice' ? 'Invoice' : 'Quotation'); } }
 async function sendChatMessage(e){
   e.preventDefault();
   const input = document.getElementById('chatInput');
@@ -6282,7 +6383,7 @@ function resizeImageFile(file, maxDim, quality){
       if(width>maxDim||height>maxDim){ const scale=maxDim/Math.max(width,height); width=Math.round(width*scale); height=Math.round(height*scale); }
       const canvas = document.createElement('canvas'); canvas.width=width; canvas.height=height;
       canvas.getContext('2d').drawImage(img,0,0,width,height);
-      canvas.toBlob(blob => { URL.revokeObjectURL(url); blob?resolve(blob):reject(new Error('toBlob failed')); }, 'image/jpeg', quality||0.9);
+      canvas.toBlob(blob => { URL.revokeObjectURL(url); blob?resolve(blob):reject(new Error('toBlob failed')); }, 'image/jpeg', quality||0.97);
     };
     img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('image load failed')); };
     img.src = url;
@@ -6293,7 +6394,7 @@ async function handleChatImagePick(e){
   e.target.value = '';
   if(!file || !activeConvId) return;
   try{
-    const url = await prepareImage(file, 900000, 1280);
+    const url = await prepareImage(file, 900000, 4096);
     await sendChatPayload({ type:'image', url }, '📷 Photo');
   } catch(err){ console.error('image send failed', err); toast(friendlyUploadError(err, 'Could not send photo.'), true); }
 }
@@ -7187,7 +7288,7 @@ async function handlePostBusiness(e){
   btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>';
   try{
     let logo = bzLogoUrl;
-    if(bzLogoFile) logo = await prepareImage(bzLogoFile, 40000, 500);
+    if(bzLogoFile) logo = await prepareImage(bzLogoFile, 40000, 4096);
     const photos = await buildPhotoUrls(bzPhotos);
     const docId = editingBusinessId || (crypto.randomUUID ? crypto.randomUUID() : 'B' + Date.now());
     const data = {
